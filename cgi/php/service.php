@@ -19,7 +19,7 @@ if (file_exists($filename)) {
     fclose($file);
 
     $diff = time() - $last_time;
-    echo "validator_monitor_last_run{validator_id='$institution'} $diff";
+    echo "validator_monitor_last_run{validator_id=\"$institution\"} $diff";
 
 } else {
 
