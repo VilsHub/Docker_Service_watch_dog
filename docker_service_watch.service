@@ -1,0 +1,10 @@
+[Unit]
+Description=Docker Service Watch Dog
+
+[Service]
+Type=simple
+ExecStart=./src/service_status_logger.sh
+User=root
+
+[Install]
+WantedBy=default.target
