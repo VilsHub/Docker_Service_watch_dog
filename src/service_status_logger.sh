@@ -10,17 +10,22 @@ keyword_D2="pending"
 
 lastNLines=1
 statusFile="./status"
+serviceStatusFile="./service_status"
 templateDataFile="./template"
 tmpTemplateDataFile=$templateDataFile"_.tmp"
 tmpOutput='./tmp'
 
 # Define functions
+function log_time(){
+    date +%s > $serviceStatusFile
+}
+
 function check_status() {
     docker logs --tail $lastNLines $serviceName > $tmpOutput
-    error=$(cat $tmpOutput | grep -w "$keyword_S1" | grep -w "$keyword_S2" | grep -w "$keyword_S3")
+    error=$(cat $tmpOutput | grep -iw "$keyword_S1" | grep -iw "$keyword_S2" | grep -iw "$keyword_S3")
 
     if [ ${#error} -eq 0 ]; then # Keywords not matched, crashed or pending
-        pending=$(cat $tmpOutput | grep -w "$keyword_D1" | grep -w "$keyword_D2")
+        pending=$(cat $tmpOutput | grep -iw "$keyword_D1" | grep -iw "$keyword_D2")
 
         if [ ${#pending} -eq 0 ]; then # Keywords not matched, crashed
             response="crashed"
@@ -31,6 +36,9 @@ function check_status() {
     else
         response="running"
     fi
+
+    log_time
+
     echo $response
 
 }
