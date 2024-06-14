@@ -21,13 +21,18 @@ if [ ! -d $fullServicePath ]; then
     mkdir -p $fullServicePath
 fi
 
+echo "Copying CGI files to target directory...:$webRoot"
 # Copy CGI files to the
-cp ./cgi/php/metric.php $webRoot"/"$metricEndpoint
-cp ./cgi/php/service.php $webRoot"/"$serviceStatusEndpoint
+cp ./cgi/php/metric.php $webRoot"/"$metricEndpoint &&
+cp ./cgi/php/service.php $webRoot"/"$serviceStatusEndpoint &&
+echo -e "CGI files copied successfuly \n"
 
+echo "Copying script files to target directory...:$fullServicePath"
 # Copy source script to service path
-cp ./src/* $fullServicePath
+cp ./src/* $fullServicePath &&
+echo -e "Scripts files copied successfuly \n"
 
+echo "Configuring service file with values..."
 # Set the service description
 sed -i "s#Docker Service Watch Dog#$systemDescription#g" $serviceFileName
 
@@ -35,16 +40,21 @@ sed -i "s#Docker Service Watch Dog#$systemDescription#g" $serviceFileName
 sed -i "s#YYYY#$fullServicePath#g" $serviceFileName
 
 # Set the service script full path in the service file
-sed -i "s#XXXX#$fullServicePath/$scriptName#g" $serviceFileName
+sed -i "s#XXXX#$fullServicePath/$scriptName#g" $serviceFileName &&
+echo -e "Service configuration completed successfuly \n"
 
+echo "Making script executable...."
 # Make the copied script executable
-chmod a+x "$fullServicePath/service_status_logger.sh"
+chmod a+x "$fullServicePath/service_status_logger.sh" &&
+echo -e "Script now executable \n"
 
+echo "Setting up service...."
 # Copied the service file to systemd directory
-cp $serviceFileName /etc/systemd/system/
+cp $serviceFileName /etc/systemd/system/ &&
 
 # Install the service
-systemctl enable $serviceName
+systemctl enable $serviceName &&
+echo -e "Service setup completed  \n"
 
 
 
