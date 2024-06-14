@@ -4,9 +4,9 @@ serviceRootDir="/var/customservices"
 serviceDirName="watchdog"
 fullServicePath=$serviceRootDir"/"$serviceDirName
 scriptName="service_status_logger.sh"
-serviceName="docker_service_watch"
+serviceName="besu_watch_dog"
 systemDescription="Besu Watch Dog"
-serviceFileName="./$serviceName.service"
+initServiceFileName="./docker_service_watch.service"
 metricEndpoint="index.php"
 serviceStatusEndpoint="service.php"
 
@@ -46,13 +46,13 @@ echo -e "Scripts files copied successfuly \n"
 
 echo "Configuring service file with values..."
 # Set the service description
-sed -i "s#Docker Service Watch Dog#$systemDescription#g" $serviceFileName
+sed -i "s#Docker Service Watch Dog#$systemDescription#g" $initServiceFileName
 
 # Set the service working directory
-sed -i "s#YYYY#$fullServicePath#g" $serviceFileName
+sed -i "s#YYYY#$fullServicePath#g" $initServiceFileName
 
 # Set the service script full path in the service file
-sed -i "s#XXXX#$fullServicePath/$scriptName#g" $serviceFileName &&
+sed -i "s#XXXX#$fullServicePath/$scriptName#g"$initServiceFileName &&
 echo -e "Service configuration completed successfuly \n"
 
 echo "Making script executable...."
@@ -62,7 +62,7 @@ echo -e "Script now executable \n"
 
 echo "Setting up service...."
 # Copied the service file to systemd directory
-cp $serviceFileName /etc/systemd/system/ &&
+cp $initServiceFileName /etc/systemd/system/$serviceName".service" &&
 
 # Install the service
 systemctl enable $serviceName &&
