@@ -1,0 +1,17 @@
+version: '3.8'
+networks:
+  monitoring:
+    driver: bridge
+volumes:
+  prometheus_data: {}
+services:
+  besuMonitor:
+    image: php:8.2.20-apache-bullseye
+    container_name: besuWatchDog
+    restart: unless-stopped
+    ports:
+      - 31008:80
+    volumes:
+      - /var/www/html/besuMonitor:/var/www/html
+    networks:
+      - monitoring
