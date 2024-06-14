@@ -10,7 +10,7 @@ serviceFileName="./$serviceName.service"
 metricEndpoint="index.php"
 serviceStatusEndpoint="service.php"
 
-if [ ${#1} -eq 0 ];
+if [ ${#1} -eq 0 ]; then
     echo -e "Please supply the institution ID, with the command ./install.sh ID\n"
     exit 2
 fi
