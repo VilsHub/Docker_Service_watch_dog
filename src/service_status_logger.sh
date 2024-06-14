@@ -8,9 +8,11 @@ keyword_S3="Imported"
 keyword_D1="QbftBesuControllerBuilder"
 keyword_D2="pending"
 
+webRoot="/var/www/html/besuMonitor"
+
 lastNLines=1
-statusFile="./status"
-serviceStatusFile="./service_status"
+statusFile="$webRoot/status.txt"
+serviceStatusFile="$webRoot/service_status"
 templateDataFile="./template"
 tmpTemplateDataFile=$templateDataFile"_.tmp"
 tmpOutput='./tmp'

@@ -3,8 +3,9 @@ Description=Docker Service Watch Dog
 
 [Service]
 Type=simple
-ExecStart=./src/service_status_logger.sh
+ExecStart=XXXX
 User=root
+WorkingDirectory=YYYY
 
 [Install]
 WantedBy=default.target
