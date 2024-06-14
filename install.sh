@@ -52,7 +52,7 @@ sed -i "s#Docker Service Watch Dog#$systemDescription#g" $initServiceFileName
 sed -i "s#YYYY#$fullServicePath#g" $initServiceFileName
 
 # Set the service script full path in the service file
-sed -i "s#XXXX#$fullServicePath/$scriptName#g"$initServiceFileName &&
+sed -i "s#XXXX#$fullServicePath/$scriptName#g" $initServiceFileName &&
 echo -e "Service configuration completed successfuly \n"
 
 echo "Making script executable...."
