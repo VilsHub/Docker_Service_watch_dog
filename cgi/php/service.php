@@ -4,7 +4,7 @@ header('Content-Type: text/plain');
 
 // Specify the path to the file
 $filename = './service_status';
-$institution = "DOT17";
+$institution = "YYYY";
 
 // Check if the file exists
 if (file_exists($filename)) {

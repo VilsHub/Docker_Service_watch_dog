@@ -10,6 +10,12 @@ serviceFileName="./$serviceName.service"
 metricEndpoint="index.php"
 serviceStatusEndpoint="service.php"
 
+if [ ${#1} -eq 0 ];
+    echo -e "Please supply the institution ID, with the command ./install.sh ID\n"
+    exit 2
+fi
+
+institutionID=$1
 
 
 # Create directories if not exist
@@ -21,13 +27,19 @@ if [ ! -d $fullServicePath ]; then
     mkdir -p $fullServicePath
 fi
 
-echo "Copying CGI files to target directory...:$webRoot"
+echo "Copying CGI files to target directory...: $webRoot"
 # Copy CGI files to the
-cp ./cgi/php/metric.php $webRoot"/"$metricEndpoint &&
+cp ./cgi/php/metrics.php $webRoot"/"$metricEndpoint &&
 cp ./cgi/php/service.php $webRoot"/"$serviceStatusEndpoint &&
 echo -e "CGI files copied successfuly \n"
 
-echo "Copying script files to target directory...:$fullServicePath"
+# Set institution ID
+echo "Setting intitution ID to: $institutionID"
+sed -i "s#YYYY#$institutionID#g" ./src/template &&
+sed -i "s#YYYY#$institutionID#g" ./cgi/php/service.php &&
+echo -e "Institution ID '$institutionID' set successfuly \n"
+
+echo "Copying script files to target directory...: $fullServicePath"
 # Copy source script to service path
 cp ./src/* $fullServicePath &&
 echo -e "Scripts files copied successfuly \n"

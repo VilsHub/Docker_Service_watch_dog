@@ -1,3 +1,3 @@
 # HELP validator_status Status of the validator
 # TYPE validator_status gauge
-validator_status{validator_id="FBN"} XXXX
+validator_status{validator_id="YYYY"} XXXX
