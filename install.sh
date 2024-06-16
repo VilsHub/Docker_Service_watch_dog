@@ -68,9 +68,9 @@ sed -i "s#XXXX#$fullServicePath/$scriptName#g" $initServiceFileName &&
 echo -e "Service configuration completed successfuly \n"
 
 echo "Making script executable...."
-# Make the copied script executable
-chmod a+x "$fullServicePath/service_status_logger.sh" &&
-echo -e "Script now executable \n"
+# Make the copied scripts executable
+chmod -R a+x "$fullServicePath/*.sh" &&
+echo -e "Scripts now executable \n"
 
 echo "Setting up service...."
 # Copied the service file to systemd directory
