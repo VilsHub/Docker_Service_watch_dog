@@ -48,7 +48,7 @@ echo -e "Institution ID '$institutionID' set successfuly \n"
 # Set Besu sync interval
 newInterval=$(( besuSyncInterval + 3 ))
 echo "Setting Besu block sync interval to: $besuSyncInterval"
-sed -i "s#X#$newInterval#g" ./src/delay &&
+sed -i "s#X#$newInterval#g" ./src/delay.sh &&
 echo -e "Besu block sync interval of '"$besuSyncInterval"s'  set successfuly \n"
 
 
@@ -70,7 +70,7 @@ echo -e "Service configuration completed successfuly \n"
 
 echo "Making script executable...."
 # Make the copied scripts executable
-chmod -R a+x "$fullServicePath/*.sh" &&
+chmod a+x "$fullServicePath/*.sh" &&
 echo -e "Scripts now executable \n"
 
 echo "Setting up service...."

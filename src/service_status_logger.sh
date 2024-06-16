@@ -1,5 +1,5 @@
 #!/bin/bash
-source ./delay
+source ./delay.sh
 serviceName="besu.validator.zone"
 
 keyword_S1="INFO"
