@@ -70,7 +70,7 @@ echo -e "Service configuration completed successfuly \n"
 
 echo "Making script executable...."
 # Make the copied scripts executable
-chmod a+x "$fullServicePath/*.sh" &&
+chmod -R a+x "$fullServicePath/"*.sh &&
 echo -e "Scripts now executable \n"
 
 echo "Setting up service...."
