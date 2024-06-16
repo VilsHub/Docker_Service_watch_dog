@@ -46,8 +46,9 @@ sed -i "s#YYYY#$institutionID#g" ./cgi/php/service.php &&
 echo -e "Institution ID '$institutionID' set successfuly \n"
 
 # Set Besu sync interval
+newInterval=$(( besuSyncInterval + 3 ))
 echo "Setting Besu block sync interval to: $besuSyncInterval"
-sed -i "s#X#$besuSyncInterval#g" ./src/delay &&
+sed -i "s#X#$newInterval#g" ./src/delay &&
 echo -e "Besu block sync interval of '"$besuSyncInterval"s'  set successfuly \n"
 
 
