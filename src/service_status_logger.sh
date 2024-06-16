@@ -33,8 +33,8 @@ function  getTimeStamp(){
    local log=$1
    ts=""
 
-   d=$(echo $log | awk  '{print $0}')
-   t=$(echo $log | awk  '{print $1}')
+   d=$(echo $log | awk  '{print $1}')
+   t=$(echo $log | awk  '{print $2}')
 
    ts=$d$t
    echo $ts
@@ -45,10 +45,10 @@ function check_status() {
     log=$(cat $tmpOutput | grep -iw "$keyword_S1" | grep -iw "$keyword_S2" | grep -iw "$keyword_S3")
 
     # Check if its frozen
-    lastLog=$(cat $tracker)
-    currentLogTimeStamp=$(getTimeStamp $log)
+    lastLog=$(cat "$tracker")
+    currentLogTimeStamp=$(getTimeStamp "$log")
 
-    if [ $lastLog = $currentLogTimeStamp ]; then
+    if [ "$lastLog" = "$currentLogTimeStamp" ]; then
         response="frozen"
     else
         # Update log
