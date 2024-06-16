@@ -15,7 +15,13 @@ if [ ${#1} -eq 0 ]; then
     exit 2
 fi
 
+if [ ${#2} -eq 0 ]; then
+    echo -e "Please supply the besu block sync interval in seconds, with the command ./install.sh ID interval\n"
+    exit 2
+fi
+
 institutionID=$1
+besuSyncInterval=$2
 
 
 # Create directories if not exist
@@ -38,6 +44,12 @@ echo "Setting intitution ID to: $institutionID"
 sed -i "s#YYYY#$institutionID#g" ./src/template &&
 sed -i "s#YYYY#$institutionID#g" ./cgi/php/service.php &&
 echo -e "Institution ID '$institutionID' set successfuly \n"
+
+# Set Besu sync interval
+echo "Setting Besu block sync interval to: $besuSyncInterval"
+sed -i "s#X#$besuSyncInterval#g" ./src/delay &&
+echo -e "Besu block sync interval of '"$besuSyncInterval"s'  set successfuly \n"
+
 
 echo "Copying script files to target directory...: $fullServicePath"
 # Copy source script to service path
