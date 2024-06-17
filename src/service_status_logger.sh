@@ -8,6 +8,7 @@ keyword_S3="Imported"
 keyword_D1="QbftBesuControllerBuilder"
 keyword_D2="pending"
 tracker="./timeTracker"
+counter="./counter"
 
 webRoot="/var/www/html/besuMonitor"
 
@@ -17,10 +18,15 @@ serviceStatusFile="$webRoot/service_status"
 templateDataFile="./template"
 tmpTemplateDataFile=$templateDataFile"_.tmp"
 tmpOutput='./tmp'
+frozenAlertCount=5
 
 # Init
 if [ ! -f $tracker  ]; then
    echo "YYYY-MM-DDHH:MM:SS.000+00:00" >  $tracker
+fi
+
+if [ ! -f $counter  ]; then
+   echo "0" >  $counter
 fi
 
 
@@ -40,33 +46,62 @@ function  getTimeStamp(){
    echo $ts
 }
 
+function getState(){
+
+    if [ ${#log} -eq 0 ]; then # Keywords not matched, crashed or pending
+        pending=$(cat $tmpOutput | grep -iw "$keyword_D1" | grep -iw "$keyword_D2")
+        local response=""
+        if [ ${#pending} -eq 0 ]; then # Keywords not matched, crashed
+            response="crashed"
+        else
+            response="pending"
+        fi
+
+    else
+        response="running"
+    fi
+
+    echo $response
+}
+
 function check_status() {
+
     docker logs --tail $lastNLines $serviceName > $tmpOutput
     log=$(cat $tmpOutput | grep -iw "$keyword_S1" | grep -iw "$keyword_S2" | grep -iw "$keyword_S3")
 
     # Check if its frozen
     lastLog=$(cat "$tracker")
     currentLogTimeStamp=$(getTimeStamp "$log")
+    
+    # Update log
+    echo $currentLogTimeStamp > $tracker
 
     if [ "$lastLog" = "$currentLogTimeStamp" ]; then
-        response="frozen"
-    else
-        # Update log
-        echo $currentLogTimeStamp > $tracker
+        count=$(cat "$counter")
 
-        # Check for the service state
-        if [ ${#log} -eq 0 ]; then # Keywords not matched, crashed or pending
-            pending=$(cat $tmpOutput | grep -iw "$keyword_D1" | grep -iw "$keyword_D2")
-
-            if [ ${#pending} -eq 0 ]; then # Keywords not matched, crashed
-                response="crashed"
-            else
-                response="pending"
-            fi
-
+        if [ $counter > 5]; then
+            response="frozen"
         else
-            response="running"
-        fi
+            response=$(getState)
+            count=$(( count += 1 ))
+            echo $count > $counter
+        fi        
+    else
+        # Check for the service state
+        # if [ ${#log} -eq 0 ]; then # Keywords not matched, crashed or pending
+        #     pending=$(cat $tmpOutput | grep -iw "$keyword_D1" | grep -iw "$keyword_D2")
+
+        #     if [ ${#pending} -eq 0 ]; then # Keywords not matched, crashed
+        #         response="crashed"
+        #     else
+        #         response="pending"
+        #     fi
+
+        # else
+        #     response="running"
+        # fi
+        echo "0" > $counter
+        response=$(getState)
     fi
 
     log_time
