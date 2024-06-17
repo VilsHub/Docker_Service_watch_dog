@@ -82,25 +82,20 @@ function check_status() {
         if [ $count -gt $frozenAlertCount ]; then
             response="frozen"
         else
+            # Check for service state
             response=$(getState)
+            
+            # Update freeze count 
             count=$(( count += 1 ))
+
+            # Track freeze count
             echo "$count" > $counter
         fi        
     else
-        # Check for the service state
-        # if [ ${#log} -eq 0 ]; then # Keywords not matched, crashed or pending
-        #     pending=$(cat $tmpOutput | grep -iw "$keyword_D1" | grep -iw "$keyword_D2")
-
-        #     if [ ${#pending} -eq 0 ]; then # Keywords not matched, crashed
-        #         response="crashed"
-        #     else
-        #         response="pending"
-        #     fi
-
-        # else
-        #     response="running"
-        # fi
+        # Reset freeze counter
         echo "0" > $counter
+
+        # Check for the service state
         response=$(getState)
     fi
 
