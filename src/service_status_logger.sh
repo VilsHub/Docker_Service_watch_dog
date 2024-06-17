@@ -7,9 +7,12 @@ keyword_S2="PersistBlockTask"
 keyword_S3="Imported"
 keyword_D1="QbftBesuControllerBuilder"
 keyword_D2="pending"
-tracker="./timeTracker"
-counter="./counter"
-counterLogs="./counterLogs"
+# tracker="./timeTracker"
+# counter="./counter"
+# counterLogs="./counterLogs"
+counter=0
+counterLogs=0
+tracker=0
 
 webRoot="/var/www/html/besuMonitor"
 
@@ -20,19 +23,20 @@ templateDataFile="./template"
 tmpTemplateDataFile=$templateDataFile"_.tmp"
 tmpOutput='./tmp'
 frozenAlertCount=5
+tracker="YYYY-MM-DDHH:MM:SS.000+00:00"
 
 # Init
-if [ ! -f $tracker  ]; then
-   echo "YYYY-MM-DDHH:MM:SS.000+00:00" >  $tracker
-fi
+# if [ ! -f $tracker  ]; then
+#    echo "YYYY-MM-DDHH:MM:SS.000+00:00" >  $tracker
+# fi
 
-if [ ! -f $counter  ]; then
-   echo 0 > $counter
-fi
+# if [ ! -f $counter  ]; then
+#    echo 0 > $counter
+# fi
 
-if [ ! -f $counterLogs  ]; then
-   touch $counterLogs
-fi
+# if [ ! -f $counterLogs  ]; then
+#    touch $counterLogs
+# fi
 
 
 # Define functions
@@ -75,13 +79,15 @@ function check_status() {
     log=$(cat $tmpOutput | grep -iw "$keyword_S1" | grep -iw "$keyword_S2" | grep -iw "$keyword_S3")
 
     # Check if its frozen
-    lastLog=$(cat "$tracker")
+    # lastLog=$(cat "$tracker")
+    lastLog=$tracker
     currentLogTimeStamp=$(getTimeStamp "$log")
     
     # Update log
-    echo $currentLogTimeStamp > $tracker
+    # echo $currentLogTimeStamp > $tracker
+    tracker=$currentLogTimeStamp
 
-    count=$(cat "$counter")
+    # count=$(cat "$counter")
 
     if [ "$lastLog" = "$currentLogTimeStamp" ]; then
         
@@ -95,16 +101,18 @@ function check_status() {
             count=$(( count += 1 ))
 
             # Track freeze count
-            echo "$count" > $counter
+            # echo "$count" > $counter
         fi       
 
     else
 
         # Track freeze history
-        echo "$count" >> $counterLogs
+        # echo "$count" >> $counterLogs
+        counterLogs=$count
 
         # Reset freeze counter
-        echo "0" > $counter
+        # echo "0" > $counter
+        counter=0
 
         # Check for the service state
         response=$(getState)
@@ -146,6 +154,11 @@ function watch_for_failures() {
         fi
         
         ec=$(check_status)
+
+        echo "Last log timeStamp: "$tracker
+        echo "counterLogs: "$counterLogs
+        echo "Freeze count: " $count
+        echo "State: " $ec
         
         sleep $delay
     done
