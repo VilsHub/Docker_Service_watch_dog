@@ -81,8 +81,9 @@ function check_status() {
     # Update log
     echo $currentLogTimeStamp > $tracker
 
+    count=$(cat "$counter")
+
     if [ "$lastLog" = "$currentLogTimeStamp" ]; then
-        count=$(cat "$counter")
         
         if [ $count -gt $frozenAlertCount ]; then
             response="frozen"
@@ -95,7 +96,8 @@ function check_status() {
 
             # Track freeze count
             echo "$count" > $counter
-        fi        
+        fi       
+
     else
 
         # Track freeze history
