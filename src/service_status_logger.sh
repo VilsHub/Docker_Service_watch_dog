@@ -12,7 +12,6 @@ keyword_D2="pending"
 # counterLogs="./counterLogs"
 counter=0
 counterLogs=0
-tracker=0
 
 webRoot="/var/www/html/besuMonitor"
 
@@ -119,7 +118,7 @@ function check_status() {
     fi
 
     log_time
-    echo $response
+    # echo $response
 
 }
 
@@ -138,7 +137,7 @@ function write_to_log(){
 
 function watch_for_failures() {
 
-    ec=$(check_status)
+    check_status
 
     while [ : ]; do
 
@@ -153,7 +152,7 @@ function watch_for_failures() {
             write_to_log 1
         fi
         
-        ec=$(check_status)
+        check_status
 
         echo "Last log timeStamp: "$tracker
         echo "counterLogs: "$counterLogs
