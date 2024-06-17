@@ -26,7 +26,7 @@ if [ ! -f $tracker  ]; then
 fi
 
 if [ ! -f $counter  ]; then
-   echo "0" >  $counter
+   echo 0 > $counter
 fi
 
 
@@ -78,13 +78,13 @@ function check_status() {
 
     if [ "$lastLog" = "$currentLogTimeStamp" ]; then
         count=$(cat "$counter")
-
-        if [ $count > $frozenAlertCount ]; then
+        
+        if [ $count -gt $frozenAlertCount ]; then
             response="frozen"
         else
             response=$(getState)
             count=$(( count += 1 ))
-            echo $count > $counter
+            echo "$count" > $counter
         fi        
     else
         # Check for the service state
