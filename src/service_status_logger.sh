@@ -23,6 +23,7 @@ tmpTemplateDataFile=$templateDataFile"_.tmp"
 tmpOutput='./tmp'
 frozenAlertCount=5
 tracker="YYYY-MM-DDHH:MM:SS.000+00:00"
+response=""
 
 # Init
 # if [ ! -f $tracker  ]; then
@@ -141,10 +142,10 @@ function watch_for_failures() {
 
     while [ : ]; do
 
-        if [[ $ec = "crashed" || $ec = "frozen" ]]; then 
+        if [[ $response = "crashed" || $response = "frozen" ]]; then 
             # Service crashed or frozen, write to log
             write_to_log 0
-        elif [ $ec = "pending" ]; then 
+        elif [ $response = "pending" ]; then 
             # Service pending, write to log
             write_to_log 0.5
         else
@@ -157,7 +158,7 @@ function watch_for_failures() {
         echo "Last log timeStamp: "$tracker
         echo "counterLogs: "$counterLogs
         echo "Freeze count: " $count
-        echo "State: " $ec
+        echo "State: " $response
         
         sleep $delay
     done
