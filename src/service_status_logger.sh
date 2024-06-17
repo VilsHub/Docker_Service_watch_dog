@@ -9,6 +9,7 @@ keyword_D1="QbftBesuControllerBuilder"
 keyword_D2="pending"
 tracker="./timeTracker"
 counter="./counter"
+counterLogs="./counterLogs"
 
 webRoot="/var/www/html/besuMonitor"
 
@@ -27,6 +28,10 @@ fi
 
 if [ ! -f $counter  ]; then
    echo 0 > $counter
+fi
+
+if [ ! -f $counterLogs  ]; then
+   touch $counterLogs
 fi
 
 
@@ -92,6 +97,10 @@ function check_status() {
             echo "$count" > $counter
         fi        
     else
+
+        # Track freeze history
+        echo "$count" >> $counterLogs
+
         # Reset freeze counter
         echo "0" > $counter
 
