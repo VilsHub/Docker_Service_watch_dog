@@ -79,7 +79,7 @@ function check_status() {
     if [ "$lastLog" = "$currentLogTimeStamp" ]; then
         count=$(cat "$counter")
 
-        if [ $counter > 5]; then
+        if [ $counter > $frozenAlertCount ]; then
             response="frozen"
         else
             response=$(getState)
