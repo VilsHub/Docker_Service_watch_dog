@@ -7,12 +7,9 @@ keyword_S2="PersistBlockTask"
 keyword_S3="Imported"
 keyword_D1="QbftBesuControllerBuilder"
 keyword_D2="pending"
-# tracker="./timeTracker"
-# counter="./counter"
-# counterLogs="./counterLogs"
-counter=0
-counterLogs=0
 
+
+count=0
 webRoot="/var/www/html/besuMonitor"
 
 lastNLines=1
@@ -24,19 +21,6 @@ tmpOutput='./tmp'
 frozenAlertCount=5
 tracker="YYYY-MM-DDHH:MM:SS.000+00:00"
 response=""
-
-# Init
-# if [ ! -f $tracker  ]; then
-#    echo "YYYY-MM-DDHH:MM:SS.000+00:00" >  $tracker
-# fi
-
-# if [ ! -f $counter  ]; then
-#    echo 0 > $counter
-# fi
-
-# if [ ! -f $counterLogs  ]; then
-#    touch $counterLogs
-# fi
 
 
 # Define functions
@@ -79,48 +63,35 @@ function check_status() {
     log=$(cat $tmpOutput | grep -iw "$keyword_S1" | grep -iw "$keyword_S2" | grep -iw "$keyword_S3")
 
     # Check if its frozen
-    # lastLog=$(cat "$tracker")
     lastLog=$tracker
     currentLogTimeStamp=$(getTimeStamp "$log")
     
     # Update log
-    # echo $currentLogTimeStamp > $tracker
     tracker=$currentLogTimeStamp
-
-    # count=$(cat "$counter")
 
     if [ "$lastLog" = "$currentLogTimeStamp" ]; then
         
         if [ $count -gt $frozenAlertCount ]; then
             response="frozen"
         else
+        
             # Check for service state
             response=$(getState)
             
             # Update freeze count 
             count=$(( count += 1 ))
-
-            # Track freeze count
-            # echo "$count" > $counter
         fi       
 
     else
 
-        # Track freeze history
-        # echo "$count" >> $counterLogs
-        counterLogs=$count
-
-        # Reset freeze counter
-        # echo "0" > $counter
-        counter=0
+        # Reset freeze count
+        count=0
 
         # Check for the service state
         response=$(getState)
     fi
 
     log_time
-    # echo $response
-
 }
 
 function write_to_log(){
@@ -155,10 +126,10 @@ function watch_for_failures() {
         
         check_status
 
-        echo "Last log timeStamp: "$tracker
-        echo "counterLogs: "$counterLogs
-        echo "Freeze count: " $count
-        echo "State: " $response
+        # echo "Last log timeStamp: "$tracker
+        # echo "counterLogs: "$counterLogs
+        # echo "Freeze count: " $count
+        # echo "State: " $response
         
         sleep $delay
     done
